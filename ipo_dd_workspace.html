@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPO DD ワークスペース — アイムファクトリー</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* aimfactory brand: エンジ × クリームホワイト */
+  --bg: #ffffff;
+  --bg2: #faf6f3;
+  --bg3: #f4ede8;
+  --bg-info: #f9f0ee;
+  --bg-warn: #fdf3e3;
+  --bg-danger: #fdf0f0;
+  --bg-success: #f0f7ed;
+  --text: #1c1210;
+  --text2: #4a3830;
+  --text3: #8a7060;
+  --text-info: #7a1515;
+  --text-warn: #7a4a0a;
+  --text-danger: #8b1a1a;
+  --text-success: #2d6010;
+  --border: rgba(139,26,26,0.14);
+  --border2: rgba(139,26,26,0.3);
+  --blue: #8B1A1A;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  background: var(--bg3);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+  font-size: 16px;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+
+
+/* ===== HEADER ===== */
+.header {
+  padding: 20px 28px 0;
+  border-bottom: none;
+  background: #8B1A1A;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.company-name { font-size: 22px; font-weight: 600; color: #ffffff; }
+
+.badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.2);
+  color: #ffffff;
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.35);
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-meta {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabs { display: flex; gap: 0; overflow-x: auto; margin-top: 4px; }
+
+.tab {
+  padding: 11px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 0;
+  color: rgba(255,255,255,0.65);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.tab:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.tab.active { color: #fff; font-weight: 600; background: rgba(255,255,255,0.08); border-bottom: 3px solid #fff; }
+
+/* ===== CONTENT ===== */
+.content { padding: 28px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat-card { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; }
+.stat-label { font-size: 13px; color: var(--text3); margin-bottom: 6px; }
+.stat-value { font-size: 26px; font-weight: 600; color: var(--text); }
+.stat-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+.two-pane { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-height: 500px; }
+@media (max-width: 700px) { .two-pane { grid-template-columns: 1fr; } }
+
+.pane {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.pane-header {
+  padding: 13px 16px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #faf0ee;
+}
+.pane-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.pane-icon { font-size: 16px; color: var(--text3); }
+.pane-body { padding: 16px; flex: 1; overflow-y: auto; max-height: 520px; }
+.pane-body::-webkit-scrollbar { width: 4px; }
+.pane-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.issue-card {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.issue-card:hover { border-color: var(--border2); background: var(--bg2); }
+.issue-card.selected { border-color: #8B1A1A; border-width: 1.5px; background: #fdf5f5; }
+.issue-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.issue-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.severity { font-size: 11px; padding: 3px 9px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; font-weight: 600; }
+.sev-high { background: #8B1A1A; color: #fff; }
+.sev-mid { background: #c4741a; color: #fff; }
+.issue-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+.detail-section { margin-bottom: 18px; }
+.detail-label { font-size: 12px; font-weight: 600; color: #8B1A1A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.detail-content { font-size: 15px; color: var(--text); line-height: 1.85; }
+
+.action-list { list-style: none; }
+.action-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border); align-items: flex-start; }
+.action-item:last-child { border-bottom: none; }
+.action-text { font-size: 15px; color: var(--text); line-height: 1.6; }
+.action-meta { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+
+.status-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 0.5px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.status-btn:hover { border-color: var(--border2); }
+.status-btn.s-pending { background: var(--bg2); color: var(--text3); }
+.status-btn.s-progress { background: #fdf0f0; color: #8B1A1A; border-color: rgba(139,26,26,0.35); }
+.status-btn.s-done { background: #f0f7ed; color: #2d6010; border-color: rgba(45,96,16,0.35); }
+
+.progress-item { margin-bottom: 14px; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.progress-name { font-size: 14px; color: var(--text); }
+.progress-pct { font-size: 13px; color: var(--text3); }
+.progress-bar { height: 5px; background: var(--bg2); border-radius: 3px; overflow: hidden; border: 0.5px solid var(--border); }
+.progress-fill { height: 100%; border-radius: 3px; background: var(--blue); transition: width 0.5s ease; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 13px; padding: 4px 11px; border-radius: 4px; background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border); }
+
+.timeline-item { display: flex; gap: 12px; margin-bottom: 14px; }
+.timeline-left { display: flex; flex-direction: column; align-items: center; }
+.timeline-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.timeline-line { width: 1px; flex: 1; background: var(--border); margin: 4px 0; min-height: 20px; }
+.timeline-date { font-size: 13px; color: var(--text3); }
+.timeline-event { font-size: 15px; color: var(--text); font-weight: 600; margin-top: 2px; }
+.timeline-note { font-size: 14px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+
+.info-box { padding: 12px 14px; background: #fdf0f0; border-radius: var(--radius); border-left: 3px solid #8B1A1A; }
+.info-box-label { font-size: 13px; font-weight: 600; color: #8B1A1A; margin-bottom: 4px; }
+.info-box-text { font-size: 14px; color: var(--text); line-height: 1.6; }
+
+.note-box { padding: 13px 16px; background: var(--bg2); border-radius: var(--radius); font-size: 14px; color: var(--text); line-height: 1.7; border-left: 3px solid var(--border2); }
+
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 220px; color: var(--text3); font-size: 13px; gap: 10px; }
+.empty-state i { font-size: 36px; }
+
+/* ===== AGENDA TAB — CLIENT FACING ===== */
+.ag-wrap {
+  padding: 8px 0 40px;
+}
+
+.ag-title-row {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ag-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.ag-title-sub {
+  font-size: 14px;
+  color: var(--text3);
+  margin-top: 5px;
+}
+
+.ag-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ag-item {
+  display: flex;
+  gap: 28px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.ag-item-last {
+  border-bottom: none;
+}
+
+.ag-item-num {
+  font-size: 36px;
+  font-weight: 700;
+  color: #8B1A1A;
+  opacity: 0.22;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 52px;
+  padding-top: 3px;
+  text-align: right;
+}
+
+.ag-item-body {
+  flex: 1;
+}
+
+.ag-item-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+.ag-item-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.85;
+  margin-bottom: 14px;
+}
+
+.ag-item-points {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px 16px;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  border-left: 3px solid #8B1A1A;
+}
+
+.ag-point {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.ag-point-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #8B1A1A;
+  flex-shrink: 0;
+  margin-top: 1px;
+  opacity: 0.6;
+  position: relative;
+  top: 1px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <span class="company-name" data-editable contenteditable="false">アイムファクトリー</span>
+      <span class="badge" data-editable contenteditable="false">IPO準備中</span>
+      <div class="header-actions">
+        <span class="header-meta">
+          <i class="ti ti-calendar-event"></i>
+          次回MTG: <span data-editable contenteditable="false">2026年5月28日</span>
+        </span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('agenda', this)">
+        <i class="ti ti-list-check"></i> 5/28 アジェンダ
+      </button>
+      <button class="tab" onclick="switchTab('summary', this)">
+        <i class="ti ti-layout-dashboard"></i> 全体課題サマリー
+      </button>
+      <button class="tab" onclick="switchTab('finance', this)">
+        <i class="ti ti-report-money"></i> 財務・管理
+      </button>
+      <button class="tab" onclick="switchTab('governance', this)">
+        <i class="ti ti-building"></i> ガバナンス
+      </button>
+      <button class="tab" onclick="switchTab('equity', this)">
+        <i class="ti ti-trending-up"></i> エクイティ戦略
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+  <!-- ===== TAB 0: AGENDA ===== -->
+  <div id="tab-agenda" class="tab-panel active">
+
+    <div class="ag-wrap">
+
+      <!-- Page title -->
+      <div class="ag-title-row">
+        <div>
+          <div class="ag-title">第2回ミーティング　ご確認事項</div>
+          <div class="ag-title-sub">2026年5月28日</div>
+        </div>
+      </div>
+
+      <!-- 3 agenda items -->
+      <div class="ag-items">
+
+        <!-- 01 -->
+        <div class="ag-item">
+          <div class="ag-item-num">01</div>
+          <div class="ag-item-body">
+            <div class="ag-item-title" data-editable contenteditable="false">IPO準備における構造的な課題について</div>
+            <div class="ag-item-desc" data-editable contenteditable="false">現在のIPO市場の実態を踏まえ、専門家ヒアリングを通じて見えた論点の共有。</div>
+            <div class="ag-item-points">
+              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text)">【IPO市場の現状】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">監査法人（大手中心）はIPOに積極的。一方、主幹事証券はバリュエーションがつかない案件は引き受けない傾向が強まっている</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">最近の主流は上場会社からの分社化など収益予測がつきやすい中型IPO。赤字上場・SaaSは厳しく、AIは値がつくが慎重</span></div>
+              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text);margin-top:6px;display:block">【エクイティストーリー】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場後5年で時価総額100億円達成に向けた成長ストーリーが必要（既存拡大 / M&amp;A / 新ビジネス展開）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場市場の検討（グロース / スタンダード / プロマーケット）— 目的・収益水準・成長シナリオから最適解を選ぶ</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場の目的・ゴールの言語化（資金調達 / 信頼向上 / 採用強化 — 本音ベースでの優先順位）</span></div>
+              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text);margin-top:6px;display:block">【足元の確認事項】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">18期（2026年6月期）の着地見込みと黒字転換シナリオ</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">監査法人との契約状況・今後のタイミング</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="ag-item">
+          <div class="ag-item-num">02</div>
+          <div class="ag-item-body">
+            <div class="ag-item-title" data-editable contenteditable="false">ご提供いただいた資料について</div>
+            <div class="ag-item-desc" data-editable contenteditable="false">送付頂いた資料の内容確認。また、追加依頼資料の確認</div>
+            <div class="ag-item-points">
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">SBI証券との協議状況・現時点での評価・主幹事候補の方向性</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">機関設計の見直し状況（監査役設置会社からの移行タイミングと今後の方針）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">追加資料のご依頼（直近3期財務諸表・中期計画最新版 など）</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="ag-item ag-item-last">
+          <div class="ag-item-num">03</div>
+          <div class="ag-item-body">
+            <div class="ag-item-title" data-editable contenteditable="false">今後の支援体制・進め方について</div>
+            <div class="ag-item-desc" data-editable contenteditable="false">財務診断・管理体制の構築・エクイティストーリーの設計など、上場審査に向けて体系的に進めていく必要性</div>
+            <div class="ag-item-points">
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ1：現状診断と優先課題の特定（〜2026年9月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ2：エクイティストーリー設計・外部専門家選定（〜2026年12月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ3：管理体制・予実管理の構築（〜2027年6月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">主幹事証券へのコンタクトを年末から今秋に前倒しすることを提案。現段階で接触することで、引受条件・整備すべき課題を早期に把握できる。</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ag-items -->
+
+    </div><!-- /ag-wrap -->
+  </div>
+
+    <!-- ===== TAB 1: SUMMARY ===== -->
+    <div id="tab-summary" class="tab-panel">
+
+      <div class="summary-grid">
+        <div class="stat-card">
+          <div class="stat-label" data-editable contenteditable="false">IPO目標</div>
+          <div class="stat-value" data-editable contenteditable="false">3〜5年</div>
+          <div class="stat-sub" data-editable contenteditable="false">最短3年・ベース5年</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-editable contenteditable="false">現在の売上規模</div>
+          <div class="stat-value" data-editable contenteditable="false">約30億円</div>
+          <div class="stat-sub" data-editable contenteditable="false">目標時価総額100億円（グロース新基準）</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-editable contenteditable="false">決算期</div>
+          <div class="stat-value" data-editable contenteditable="false">6月</div>
+          <div class="stat-sub" data-editable contenteditable="false">創業18年目・第二創業期</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" data-editable contenteditable="false">重要課題数</div>
+          <div class="stat-value" data-editable contenteditable="false">4件</div>
+          <div class="stat-sub" data-editable contenteditable="false">高優先 3件 / 中優先 1件</div>
+        </div>
+      </div>
+
+      <div class="two-pane">
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-alert-triangle pane-icon"></i>
+            <span class="pane-title">課題一覧（全体）</span>
+          </div>
+          <div class="pane-body">
+            <div class="issue-card" onclick="selectIssue('finance')" id="card-finance">
+              <div class="issue-card-header">
+                <span class="issue-title" data-editable contenteditable="false">予実管理体制の整備</span>
+                <span class="severity sev-high">高優先</span>
+              </div>
+              <div class="issue-desc" data-editable contenteditable="false">月次の予実管理が未整備。経営判断に必要な数値管理の仕組みを構築する必要がある。</div>
+            </div>
+            <div class="issue-card" onclick="selectIssue('performance')" id="card-performance">
+              <div class="issue-card-header">
+                <span class="issue-title" data-editable contenteditable="false">直近期業績の着地と黒字転換の見通し</span>
+                <span class="severity sev-high">高優先</span>
+              </div>
+              <div class="issue-desc" data-editable contenteditable="false">直近3ヶ月（2〜4月）は営業赤字が継続。18期（2026年6月期）の着地見込みと黒字転換シナリオの確認が急務。スタンダード上場を狙う場合は経常利益1億円が新規上場要件。</div>
+            </div>
+            <div class="issue-card" onclick="selectIssue('equity')" id="card-equity">
+              <div class="issue-card-header">
+                <span class="issue-title" data-editable contenteditable="false">成長戦略・エクイティストーリーの設計</span>
+                <span class="severity sev-high">高優先</span>
+              </div>
+              <div class="issue-desc" data-editable contenteditable="false">IPO目的の明確化から時価総額100億円達成シナリオの設計まで。成長戦略（本業特化・M&amp;A・新事業）と一体で構築する必要がある。</div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-file-description pane-icon"></i>
+            <span class="pane-title">課題詳細・対応方針</span>
+          </div>
+          <div class="pane-body" id="detail-pane">
+            <div class="empty-state">
+              <i class="ti ti-mouse-pointer"></i>
+              <span>左の課題カードを選択してください</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 2: FINANCE ===== -->
+    <div id="tab-finance" class="tab-panel">
+      <div class="two-pane">
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-report pane-icon"></i>
+            <span class="pane-title">財務・管理部門の課題</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">現状スナップショット</div>
+              <div class="detail-content" data-editable contenteditable="false">
+                売上約30億円（フリーランス供給・人材紹介の2事業）。6月決算。第二創業期と位置づけ。
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">具体的課題</div>
+              <ul class="action-list">
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">予実管理の仕組みが未整備</div>
+                    <div class="action-meta" data-editable contenteditable="false">月次P&amp;L・KPI管理フローの設計が必要</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">与信管理規程の内容確認・実運用の検証</div>
+                    <div class="action-meta" data-editable contenteditable="false">規程は整備済み。実際に機能しているか・審査基準を満たすかを精査する</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">規程類の上場審査基準への適合確認</div>
+                    <div class="action-meta" data-editable contenteditable="false">職務権限・稟議・内部統制等、規程は整備済み。内容・運用実態の精査が必要</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">管理部体制の整備</div>
+                    <div class="action-meta" data-editable contenteditable="false">人員構成・役割分担の見直しと強化方針の策定</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label" style="display:flex;align-items:center;justify-content:space-between;">東証グロース市場 関連規制（2025年改正）<a href="https://www.jpx.co.jp/equities/follow-up/nlsgeu000006gevo-att/um3qrc000001o0pl.pdf" target="_blank" style="font-size:12px;color:#8B1A1A;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0"><i class="ti ti-external-link" style="font-size:13px"></i>東証資料を開く</a></div>
+              <div class="note-box" data-editable contenteditable="false">新基準：上場後5年で時価総額100億円。2030年適用開始。100億円未満でも成長戦略を開示すれば上場維持可能。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-checklist pane-icon"></i>
+            <span class="pane-title">対応策・進捗管理</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">進捗</div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-name" data-editable contenteditable="false">予実管理構築</span>
+                  <span class="progress-pct">0%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-name" data-editable contenteditable="false">管理部体制整備</span>
+                  <span class="progress-pct">0%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-name" data-editable contenteditable="false">規程整備支援</span>
+                  <span class="progress-pct">0%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-label">ネクストアクション</div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">平山副社長から送付の会社資料確認</div>
+                  <div class="action-meta" data-editable contenteditable="false">財務3期分・組織図・規程類をチェック</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">予実管理の現状ヒアリング設計</div>
+                  <div class="action-meta" data-editable contenteditable="false">どの数字を・誰が・いつ見ているかを確認</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">管理部体制の強化方針の確認</div>
+                  <div class="action-meta" data-editable contenteditable="false">人員構成・役割分担・今後の方向性を整理</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 3: GOVERNANCE ===== -->
+    <div id="tab-governance" class="tab-panel">
+      <div class="two-pane">
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-users pane-icon"></i>
+            <span class="pane-title">ガバナンス課題</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">経営体制の現状</div>
+              <div class="detail-content" data-editable contenteditable="false">久利社長：代表取締役。トップライン重視で自ら営業を牽引。<br><br>平山副社長：2025年7月ジョイン。営業企画・マーケ出身。管理部門を統括。<br><br>雨宮取締役（社外）：リクルート出身。コンフィデンス・インターワークスをマザーズ→東証1部上場に導いたIPO経験者。スマートエージェンシー代表（株主）。財務・経営判断の実質的アドバイザー。<br><br>渡部取締役（社外）：2026年3月就任。新任社外取締役。</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">ガバナンス上の問題</div>
+              <ul class="action-list">
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">管理部門のあるべき組織体制が未設計</div>
+                    <div class="action-meta" data-editable contenteditable="false">理想像と最低限必要な体制を明確にすることが先決</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false">監査等委員会設置会社への移行進捗</div>
+                    <div class="action-meta" data-editable contenteditable="false">2025年10月に監査役会廃止済み。移行のタイミングと定款変更の状況を確認</div>
+                  </div>
+                </li>
+
+
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label" style="display:flex;align-items:center;justify-content:space-between;">東証グロース審査 ガバナンス要件<a href="https://www.jpx.co.jp/equities/listing/criteria/listing/02.html" target="_blank" style="font-size:12px;color:#8B1A1A;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px;text-transform:none;letter-spacing:0"><i class="ti ti-external-link" style="font-size:13px"></i>東証基準を確認</a></div>
+              <div class="note-box" data-editable contenteditable="false">上場審査では、コーポレートガバナンス体制・内部統制の整備状況が重点的に確認される。詳細な形式要件・実質審査基準は東証の上場審査等に関するガイドラインを参照。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-calendar-event pane-icon"></i>
+            <span class="pane-title">ガバナンス整備ロードマップ</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">IPOタイムライン（仮）</div>
+              <div>
+                <div class="timeline-item">
+                  <div class="timeline-left"><div class="timeline-dot" style="background:var(--blue)"></div><div class="timeline-line"></div></div>
+                  <div>
+                    <div class="timeline-date" data-editable contenteditable="false">2026年5〜6月</div>
+                    <div class="timeline-event" data-editable contenteditable="false">現状診断・課題整理フェーズ</div>
+                    <div class="timeline-note" data-editable contenteditable="false">現状の課題整理と優先度の確認。</div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-left"><div class="timeline-dot" style="background:var(--text3)"></div><div class="timeline-line"></div></div>
+                  <div>
+                    <div class="timeline-date" data-editable contenteditable="false">〜2026年12月末</div>
+                    <div class="timeline-event" data-editable contenteditable="false">エクイティストーリー設計・外部専門家選定</div>
+                    <div class="timeline-note" data-editable contenteditable="false">エクイティストーリーの設計と主幹事証券・監査法人の選定開始。</div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-left"><div class="timeline-dot" style="background:var(--text3)"></div><div class="timeline-line"></div></div>
+                  <div>
+                    <div class="timeline-date" data-editable contenteditable="false">〜2027年6月末</div>
+                    <div class="timeline-event" data-editable contenteditable="false">管理体制・予実管理の構築</div>
+                    <div class="timeline-note" data-editable contenteditable="false">管理体制の再設計・予実管理の仕組み構築。</div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-left"><div class="timeline-dot" style="background:var(--text3)"></div></div>
+                  <div>
+                    <div class="timeline-date" data-editable contenteditable="false">2028〜2030年（最短3年・ベース5年）</div>
+                    <div class="timeline-event" data-editable contenteditable="false">IPO</div>
+                    <div class="timeline-note" data-editable contenteditable="false">グロース市場 or スタンダード市場。年末に主幹事証券へのコンタクト開始予定。</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-label">ネクストアクション</div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">管理部門のあるべき組織体制の設計</div>
+                  <div class="action-meta" data-editable contenteditable="false">理想像と最低限必要な体制の両面から整理する</div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB 4: EQUITY ===== -->
+    <div id="tab-equity" class="tab-panel">
+      <div class="two-pane">
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-chart-line pane-icon"></i>
+            <span class="pane-title">現状と論点</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">現状と課題</div>
+              <div class="detail-content" data-editable contenteditable="false">IPOにあたってまず決めるべきは「どの市場に上場するか」と「何のために上場するか」の2点。市場・目的の選択によって、求められる成長ストーリーと審査基準が大きく変わる。<br><br>なお、グロース市場の「上場後5年・時価総額100億円」新基準の起算点は上場日。仮に2028年に上場すれば、期限は2030年ではなく2033年となる。</div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">市場・シナリオの選択肢</div>
+              <ul class="action-list">
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false" style="color:var(--text-info)">① グロース市場上場</div>
+                    <div class="action-meta" data-editable contenteditable="false">利益要件なし。赤字でも上場可能だが、「上場後5年・時価総額100億円」の成長ストーリーを主幹事証券に示せることが前提条件。M&amp;Aや新事業を含む複数シナリオの組み合わせが現実的。</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false" style="color:var(--text-warn)">② スタンダード市場上場</div>
+                    <div class="action-meta" data-editable contenteditable="false">新規上場に経常利益1億円以上が必要。ただし上場維持基準から利益要件は撤廃済みで、一度上場すれば維持ハードルは低い。「信頼向上・採用強化」が主目的なら、高い成長を約束しなくて済むスタンダードの方が現実的な場合もある。</div>
+                  </div>
+                </li>
+                <li class="action-item">
+                  <div>
+                    <div class="action-text" data-editable contenteditable="false" style="color:var(--text-success)">③ TOKYO PRO Market（プロマーケット）</div>
+                    <div class="action-meta" data-editable contenteditable="false">機関投資家・資産家など「プロの投資家」のみが参加できる市場。審査ハードルが低く上場しやすい一方、一般投資家は参加できないため流動性・知名度向上効果は限定的。大規模な資金調達より「上場企業としての信頼性」が目的なら選択肢になりうる。</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">東証グロース市場 成長基準（2025年改正）</div>
+              <div class="note-box" data-editable contenteditable="false">グロース新基準：上場後5年で時価総額100億円（起算点は上場日）。2030年はすでに上場している企業への適用開始日。未達でも成長戦略を開示すれば猶予あり。スタンダードへの移行も可能で、移行後の上場維持に利益要件はなし。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-header">
+            <i class="ti ti-pencil pane-icon"></i>
+            <span class="pane-title">ネクストアクション</span>
+          </div>
+          <div class="pane-body">
+            <div class="detail-section">
+              <div class="detail-label">ネクストアクション</div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">IPO目的の言語化</div>
+                  <div class="action-meta" data-editable contenteditable="false">なぜ上場するのか？資金・信頼・採用・何が本質？</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">TAMの定義と市場規模の数値化</div>
+                  <div class="action-meta" data-editable contenteditable="false">フリーランス市場・HR市場の成長性を定量化</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">時価総額100億円達成シナリオの数値設計</div>
+                  <div class="action-meta" data-editable contenteditable="false">既存事業成長 + M&amp;A + 新事業の組み合わせ</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">証券会社コミュニケーション支援</div>
+                  <div class="action-meta" data-editable contenteditable="false">主幹事候補との早期コンタクトが有利</div>
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+                <div class="action-row-content">
+                  <div class="action-text" data-editable contenteditable="false">同規模IPO企業のベンチマーク収集</div>
+                  <div class="action-meta" data-editable contenteditable="false">類似事例の成長シナリオ・バリュエーション水準を把握</div>
+                </div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">論点</div>
+              <div class="tag-row">
+                <span class="tag" data-editable contenteditable="false">IPO目的の確認</span>
+                <span class="tag" data-editable contenteditable="false">成長シナリオ選択</span>
+                <span class="tag" data-editable contenteditable="false">M&amp;A意向の深掘り</span>
+                <span class="tag" data-editable contenteditable="false">証券会社への準備状況</span>
+                <span class="tag" data-editable contenteditable="false">監査法人の目処</span>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+
+/* ===== STATUS TOGGLE ===== */
+const statusCycle = [
+  { cls: 's-pending', icon: 'ti-circle', label: '未着手' },
+  { cls: 's-progress', icon: 'ti-progress', label: '対応中' },
+  { cls: 's-done', icon: 'ti-circle-check', label: '完了' },
+];
+
+function toggleStatus(btn) {
+  if (document.body.classList.contains('editing')) return;
+  const current = statusCycle.findIndex(s => btn.classList.contains(s.cls));
+  const next = (current + 1) % statusCycle.length;
+  statusCycle.forEach(s => btn.classList.remove(s.cls));
+  btn.classList.add(statusCycle[next].cls);
+  btn.innerHTML = `<i class="ti ${statusCycle[next].icon}"></i> ${statusCycle[next].label}`;
+}
+
+/* ===== TAB SWITCH ===== */
+function switchTab(tab, el) {
+  if (document.body.classList.contains('editing')) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+/* ===== ISSUE DETAIL ===== */
+const issueDetails = {
+
+  finance: {
+    title: '予実管理体制の整備',
+    severity: 'high',
+    background: '月次の予実管理が未整備で、経営層がリアルタイムの数値を把握できていない状態。成長投資の判断基準となる管理会計の仕組みを早期に構築する必要がある。',
+    actions: [
+      { text: '予実管理フレームの設計', meta: '月次P&L・KPI・予算プロセスの整備' },
+      { text: '財務3期分の分析', meta: '平山副社長から資料入手後に実施' },
+      { text: '管理会計レポートフォーマット整備', meta: '経営陣が見るべき指標の定義' },
+    ],
+    tags: ['財務', '管理会計', 'CFO']
+  },
+  performance: {
+    title: '直近期業績の着地と黒字転換の見通し',
+    severity: 'high',
+    background: '直近3ヶ月（2〜4月）は営業赤字が継続（2月▲1,500万円、3月▲713万円、4月▲713万円）。年換算売上は約30〜33億円水準。雨宮取締役から「3期連続赤字になるとリファイナンスの難易度が上がる」と強く指摘されており、18期（2026年6月期）の黒字着地が最優先課題。スタンダード市場への新規上場には経常利益1億円以上が必要。',
+    actions: [
+      { text: '18期（2026年6月期）着地見込みの確認', meta: '黒字転換できるか、営業利益の水準' },
+      { text: '黒字転換シナリオの設計', meta: '4月・5月・6月の積み上げ見込みと根拠' },
+      { text: 'スタンダード上場の利益要件との照合', meta: '経常利益1億円達成の現実性' },
+    ],
+    tags: ['業績', '黒字転換', '上場要件']
+  },
+  equity: {
+    title: '成長戦略・エクイティストーリーの設計',
+    severity: 'high',
+    background: 'IPO目的が不明確なまま上場準備を進めるリスクがある。時価総額100億円達成に向けた成長シナリオ（本業特化・M&A・新事業）の方向性を経営陣と合意し、証券会社・投資家に伝わるストーリーとして設計する必要がある。',
+    actions: [
+      { text: 'IPO目的・上場ゴールの言語化', meta: '資金調達 / 信頼向上 / 採用強化 — どれが本質か' },
+      { text: '成長シナリオの選択肢整理と合意', meta: '本業特化・M&A・新事業の組み合わせを検討' },
+      { text: 'エクイティストーリーの設計・証券会社対応', meta: '監査法人・主幹事への早期コンタクト' },
+    ],
+    tags: ['成長戦略', 'エクイティ', 'IPO目的', '証券会社']
+  },
+
+
+  growth: null // 統合済み（equityに含む）
+};
+
+function selectIssue(key) {
+  if (document.body.classList.contains('editing')) return;
+  document.querySelectorAll('.issue-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + key).classList.add('selected');
+  const d = issueDetails[key];
+  const sevMap = { high: ['sev-high', '高優先'], mid: ['sev-mid', '中優先'] };
+  const [sevClass, sevLabel] = sevMap[d.severity];
+
+  const actionItems = d.actions.map(a => `
+    <div class="action-row">
+      <button class="status-btn s-pending" onclick="toggleStatus(this)"><i class="ti ti-circle"></i> 未着手</button>
+      <div class="action-row-content">
+        <div class="action-text">${a.text}</div>
+        <div class="action-meta">${a.meta}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const tags = d.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  document.getElementById('detail-pane').innerHTML = `
+    <div class="detail-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span class="severity ${sevClass}">${sevLabel}</span>
+        <span style="font-size:14px;font-weight:600;color:var(--text)">${d.title}</span>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">背景・現状</div>
+      <div class="detail-content">${d.background}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">対応アクション（ステータスをクリックで更新）</div>
+      ${actionItems}
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">関連タグ</div>
+      <div class="tag-row">${tags}</div>
+    </div>
+  `;
+}
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "ipo-dd-workspace",
+  "version": "1.0.0",
+  "description": "IPO DDワークスペース",
+  "scripts": {
+    "scan": "node scan.js"
+  }
+}
