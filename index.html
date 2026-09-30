@@ -335,6 +335,174 @@ body {
   top: 1px;
 }
 
+/* ===== MTG履歴・資料メモ ===== */
+.btn-add {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.btn-add:hover { background: #7a1515; }
+
+.add-form {
+  display: none;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+.add-form.open { display: block; }
+
+.form-group { margin-bottom: 12px; }
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 5px;
+  display: block;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+}
+.form-input[type="date"] {
+  color-scheme: light;
+  min-height: 40px;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--border2);
+}
+
+.form-textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+
+.btn-submit {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-submit:hover { background: #7a1515; }
+
+.accordion-card {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.accordion-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: var(--bg2);
+  transition: background 0.15s;
+  gap: 12px;
+}
+.accordion-header:hover { background: var(--bg3); }
+.accordion-title { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; }
+.accordion-chevron { color: var(--text3); transition: transform 0.2s; font-size: 18px; }
+.accordion-card.open .accordion-chevron { transform: rotate(180deg); }
+.accordion-body {
+  display: none;
+  padding: 16px;
+  border-top: 0.5px solid var(--border);
+}
+.accordion-card.open .accordion-body { display: block; }
+
+.mtg-content-area { min-height: 200px; }
+
+.memo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.memo-filter-label { font-size: 13px; color: var(--text2); font-weight: 600; }
+.memo-filter-select { width: auto; min-width: 200px; }
+
+.memo-card {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--bg);
+}
+.memo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.memo-folder {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-info);
+  background: var(--bg-info);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.memo-filename { font-size: 15px; font-weight: 600; color: var(--text); margin-top: 6px; }
+.memo-datetime { font-size: 12px; color: var(--text3); margin-top: 4px; }
+.memo-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 0.5px solid var(--border);
+}
+.memo-body-empty { color: var(--text3); font-style: italic; }
+
+.btn-delete {
+  background: transparent;
+  border: 0.5px solid var(--border);
+  color: var(--text-danger);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-delete:hover { background: var(--bg-danger); border-color: var(--text-danger); }
+
+.action-row { display: flex; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border); align-items: flex-start; }
+.action-row:last-child { border-bottom: none; }
+.action-row-content { flex: 1; }
+
 </style>
 </head>
 <body>
@@ -354,7 +522,10 @@ body {
     </div>
     <div class="tabs">
       <button class="tab active" onclick="switchTab('agenda', this)">
-        <i class="ti ti-list-check"></i> 5/28 アジェンダ
+        <i class="ti ti-history"></i> MTG履歴
+      </button>
+      <button class="tab" onclick="switchTab('memos', this)">
+        <i class="ti ti-notes"></i> 資料メモ
       </button>
       <button class="tab" onclick="switchTab('summary', this)">
         <i class="ti ti-layout-dashboard"></i> 全体課題サマリー
@@ -374,75 +545,122 @@ body {
   <!-- Content -->
   <div class="content">
 
-  <!-- ===== TAB 0: AGENDA ===== -->
+  <!-- ===== TAB 0: MTG履歴 ===== -->
   <div id="tab-agenda" class="tab-panel active">
 
     <div class="ag-wrap">
+      <button type="button" class="btn-add" onclick="toggleMtgForm()">
+        <i class="ti ti-plus"></i> 新しいMTGを追加
+      </button>
 
-      <!-- Page title -->
-      <div class="ag-title-row">
-        <div>
-          <div class="ag-title">第2回ミーティング　ご確認事項</div>
-          <div class="ag-title-sub">2026年5月28日</div>
+      <div id="mtg-add-form" class="add-form">
+        <div class="form-group">
+          <label class="form-label" for="mtg-date-input">MTG日付</label>
+          <input type="date" id="mtg-date-input" class="form-input">
         </div>
+        <div class="form-group">
+          <label class="form-label" for="mtg-title-input">MTGタイトル</label>
+          <input type="text" id="mtg-title-input" class="form-input" placeholder="例：第3回ミーティング">
+        </div>
+        <button type="button" class="btn-submit" onclick="addMtg()">追加</button>
       </div>
 
-      <!-- 3 agenda items -->
-      <div class="ag-items">
+      <div id="mtg-list"></div>
+    </div>
 
-        <!-- 01 -->
+    <template id="mtg-builtin-template">
+      <div class="ag-items">
         <div class="ag-item">
           <div class="ag-item-num">01</div>
           <div class="ag-item-body">
-            <div class="ag-item-title" data-editable contenteditable="false">IPO準備における構造的な課題について</div>
-            <div class="ag-item-desc" data-editable contenteditable="false">現在のIPO市場の実態を踏まえ、専門家ヒアリングを通じて見えた論点の共有。</div>
+            <div class="ag-item-title">IPO準備における構造的な課題について</div>
+            <div class="ag-item-desc">現在のIPO市場の実態を踏まえ、専門家ヒアリングを通じて見えた論点の共有。</div>
             <div class="ag-item-points">
-              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text)">【IPO市場の現状】</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">監査法人（大手中心）はIPOに積極的。一方、主幹事証券はバリュエーションがつかない案件は引き受けない傾向が強まっている</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">最近の主流は上場会社からの分社化など収益予測がつきやすい中型IPO。赤字上場・SaaSは厳しく、AIは値がつくが慎重</span></div>
-              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text);margin-top:6px;display:block">【エクイティストーリー】</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場後5年で時価総額100億円達成に向けた成長ストーリーが必要（既存拡大 / M&amp;A / 新ビジネス展開）</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場市場の検討（グロース / スタンダード / プロマーケット）— 目的・収益水準・成長シナリオから最適解を選ぶ</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">上場の目的・ゴールの言語化（資金調達 / 信頼向上 / 採用強化 — 本音ベースでの優先順位）</span></div>
-              <div class="ag-point"><span data-editable contenteditable="false" style="font-weight:600;color:var(--text);margin-top:6px;display:block">【足元の確認事項】</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">18期（2026年6月期）の着地見込みと黒字転換シナリオ</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">監査法人との契約状況・今後のタイミング</span></div>
+              <div class="ag-point"><span style="font-weight:600;color:var(--text)">【IPO市場の現状】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>監査法人（大手中心）はIPOに積極的。一方、主幹事証券はバリュエーションがつかない案件は引き受けない傾向が強まっている</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>最近の主流は上場会社からの分社化など収益予測がつきやすい中型IPO。赤字上場・SaaSは厳しく、AIは値がつくが慎重</span></div>
+              <div class="ag-point"><span style="font-weight:600;color:var(--text);margin-top:6px;display:block">【エクイティストーリー】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>上場後5年で時価総額100億円達成に向けた成長ストーリーが必要（既存拡大 / M&amp;A / 新ビジネス展開）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>上場市場の検討（グロース / スタンダード / プロマーケット）— 目的・収益水準・成長シナリオから最適解を選ぶ</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>上場の目的・ゴールの言語化（資金調達 / 信頼向上 / 採用強化 — 本音ベースでの優先順位）</span></div>
+              <div class="ag-point"><span style="font-weight:600;color:var(--text);margin-top:6px;display:block">【足元の確認事項】</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>18期（2026年6月期）の着地見込みと黒字転換シナリオ</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>監査法人との契約状況・今後のタイミング</span></div>
             </div>
           </div>
         </div>
-
-        <!-- 02 -->
         <div class="ag-item">
           <div class="ag-item-num">02</div>
           <div class="ag-item-body">
-            <div class="ag-item-title" data-editable contenteditable="false">ご提供いただいた資料について</div>
-            <div class="ag-item-desc" data-editable contenteditable="false">送付頂いた資料の内容確認。また、追加依頼資料の確認</div>
+            <div class="ag-item-title">ご提供いただいた資料について</div>
+            <div class="ag-item-desc">送付頂いた資料の内容確認。また、追加依頼資料の確認</div>
             <div class="ag-item-points">
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">SBI証券との協議状況・現時点での評価・主幹事候補の方向性</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">機関設計の見直し状況（監査役設置会社からの移行タイミングと今後の方針）</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">追加資料のご依頼（直近3期財務諸表・中期計画最新版 など）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>SBI証券との協議状況・現時点での評価・主幹事候補の方向性</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>機関設計の見直し状況（監査役設置会社からの移行タイミングと今後の方針）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>追加資料のご依頼（直近3期財務諸表・中期計画最新版 など）</span></div>
             </div>
           </div>
         </div>
-
-        <!-- 03 -->
         <div class="ag-item ag-item-last">
           <div class="ag-item-num">03</div>
           <div class="ag-item-body">
-            <div class="ag-item-title" data-editable contenteditable="false">今後の支援体制・進め方について</div>
-            <div class="ag-item-desc" data-editable contenteditable="false">財務診断・管理体制の構築・エクイティストーリーの設計など、上場審査に向けて体系的に進めていく必要性</div>
+            <div class="ag-item-title">今後の支援体制・進め方について</div>
+            <div class="ag-item-desc">財務診断・管理体制の構築・エクイティストーリーの設計など、上場審査に向けて体系的に進めていく必要性</div>
             <div class="ag-item-points">
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ1：現状診断と優先課題の特定（〜2026年9月末）</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ2：エクイティストーリー設計・外部専門家選定（〜2026年12月末）</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">フェーズ3：管理体制・予実管理の構築（〜2027年6月末）</span></div>
-              <div class="ag-point"><span class="ag-point-dot"></span><span data-editable contenteditable="false">主幹事証券へのコンタクトを年末から今秋に前倒しすることを提案。現段階で接触することで、引受条件・整備すべき課題を早期に把握できる。</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>フェーズ1：現状診断と優先課題の特定（〜2026年9月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>フェーズ2：エクイティストーリー設計・外部専門家選定（〜2026年12月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>フェーズ3：管理体制・予実管理の構築（〜2027年6月末）</span></div>
+              <div class="ag-point"><span class="ag-point-dot"></span><span>主幹事証券へのコンタクトを年末から今秋に前倒しすることを提案。現段階で接触することで、引受条件・整備すべき課題を早期に把握できる。</span></div>
             </div>
           </div>
         </div>
+      </div>
+    </template>
+  </div>
 
-      </div><!-- /ag-items -->
+  <!-- ===== TAB: 資料メモ ===== -->
+  <div id="tab-memos" class="tab-panel">
+    <div class="ag-wrap">
+      <button type="button" class="btn-add" onclick="toggleMemoForm()">
+        <i class="ti ti-plus"></i> メモを追加
+      </button>
 
-    </div><!-- /ag-wrap -->
+      <div id="memo-add-form" class="add-form">
+        <div class="form-group">
+          <label class="form-label" for="memo-folder-input">フォルダ</label>
+          <select id="memo-folder-input" class="form-select">
+            <option value="SBI証券提出資料">SBI証券提出資料</option>
+            <option value="財務資料">財務資料</option>
+            <option value="取締役会・総会議事録">取締役会・総会議事録</option>
+            <option value="組織・規程">組織・規程</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="memo-filename-input">ファイル名</label>
+          <input type="text" id="memo-filename-input" class="form-input" placeholder="自由入力">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="memo-body-input">メモ本文</label>
+          <textarea id="memo-body-input" class="form-textarea" placeholder="自由記述"></textarea>
+        </div>
+        <button type="button" class="btn-submit" onclick="addMemo()">追加</button>
+      </div>
+
+      <div class="memo-toolbar">
+        <span class="memo-filter-label">フォルダで絞り込み</span>
+        <select id="memo-filter" class="form-select memo-filter-select" onchange="renderMemos()">
+          <option value="">すべて</option>
+          <option value="SBI証券提出資料">SBI証券提出資料</option>
+          <option value="財務資料">財務資料</option>
+          <option value="取締役会・総会議事録">取締役会・総会議事録</option>
+          <option value="組織・規程">組織・規程</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div id="memo-list"></div>
+    </div>
   </div>
 
     <!-- ===== TAB 1: SUMMARY ===== -->
@@ -840,6 +1058,280 @@ body {
 
 <script>
 
+/* ===== MTG履歴 ===== */
+const MTG_STORAGE_KEY = 'mtg_history';
+const BUILTIN_MTG_ID = 'mtg-builtin-20260528';
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatDateToJapanese(isoDate) {
+  const m = String(isoDate).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return '';
+  return `${+m[1]}年${+m[2]}月${+m[3]}日`;
+}
+
+function parseMtgDate(dateStr) {
+  const s = String(dateStr);
+  const jp = s.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (jp) return new Date(+jp[1], +jp[2] - 1, +jp[3]).getTime();
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return new Date(+iso[1], +iso[2] - 1, +iso[3]).getTime();
+  return 0;
+}
+
+function getDefaultMtgHistory() {
+  return [{
+    id: BUILTIN_MTG_ID,
+    date: '2026年5月28日',
+    title: '第2回ミーティング　ご確認事項',
+    type: 'builtin',
+    content: '',
+    expanded: false,
+    sortKey: parseMtgDate('2026年5月28日')
+  }];
+}
+
+function loadMtgHistory() {
+  try {
+    const raw = localStorage.getItem(MTG_STORAGE_KEY);
+    if (!raw) {
+      const defaults = getDefaultMtgHistory();
+      saveMtgHistory(defaults);
+      return defaults;
+    }
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data) || data.length === 0) {
+      const defaults = getDefaultMtgHistory();
+      saveMtgHistory(defaults);
+      return defaults;
+    }
+    const defaultBuiltin = getDefaultMtgHistory()[0];
+    let changed = false;
+    const builtin = data.find(m => m.id === BUILTIN_MTG_ID);
+    if (!builtin) {
+      data.push(defaultBuiltin);
+      changed = true;
+    } else {
+      if (builtin.date !== defaultBuiltin.date) { builtin.date = defaultBuiltin.date; changed = true; }
+      if (builtin.title !== defaultBuiltin.title) { builtin.title = defaultBuiltin.title; changed = true; }
+      if (builtin.type !== 'builtin') { builtin.type = 'builtin'; changed = true; }
+      if (builtin.expanded === undefined) { builtin.expanded = false; changed = true; }
+      if (!builtin.sortKey) { builtin.sortKey = defaultBuiltin.sortKey; changed = true; }
+    }
+    if (changed) saveMtgHistory(data);
+    return data;
+  } catch {
+    const defaults = getDefaultMtgHistory();
+    saveMtgHistory(defaults);
+    return defaults;
+  }
+}
+
+function saveMtgHistory(data) {
+  localStorage.setItem(MTG_STORAGE_KEY, JSON.stringify(data));
+}
+
+function getMtgSortKey(mtg) {
+  return mtg.sortKey || parseMtgDate(mtg.date) || 0;
+}
+
+function renderMtgList() {
+  const container = document.getElementById('mtg-list');
+  if (!container) return;
+
+  const list = loadMtgHistory().slice().sort((a, b) => {
+    const diff = getMtgSortKey(b) - getMtgSortKey(a);
+    if (diff !== 0) return diff;
+    return String(b.id).localeCompare(String(a.id));
+  });
+  const template = document.getElementById('mtg-builtin-template');
+
+  container.innerHTML = list.map(mtg => {
+    const header = `${mtg.date}｜${mtg.title}`;
+    const openClass = mtg.expanded ? 'open' : '';
+    let body = '';
+
+    if (mtg.type === 'builtin' && template) {
+      body = template.innerHTML;
+    } else {
+      body = `<textarea class="form-textarea mtg-content-area" data-mtg-id="${escapeHtml(mtg.id)}" oninput="updateMtgContent(this.dataset.mtgId, this.value)" placeholder="メモ・議事録など">${escapeHtml(mtg.content || '')}</textarea>`;
+    }
+
+    return `
+      <div class="accordion-card ${openClass}" data-mtg-id="${escapeHtml(mtg.id)}">
+        <div class="accordion-header" onclick="toggleMtgAccordion('${escapeHtml(mtg.id)}')">
+          <span class="accordion-title">${escapeHtml(header)}</span>
+          <i class="ti ti-chevron-down accordion-chevron"></i>
+        </div>
+        <div class="accordion-body">${body}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleMtgForm() {
+  document.getElementById('mtg-add-form').classList.toggle('open');
+}
+
+function addMtg() {
+  const dateInput = document.getElementById('mtg-date-input');
+  const titleInput = document.getElementById('mtg-title-input');
+  const isoDate = dateInput.value;
+  const title = titleInput.value.trim();
+  const date = formatDateToJapanese(isoDate);
+
+  if (!isoDate || !title) {
+    alert('MTG日付とタイトルを入力してください。');
+    return;
+  }
+
+  const data = loadMtgHistory();
+  data.push({
+    id: 'mtg-' + Date.now(),
+    date,
+    title,
+    type: 'custom',
+    content: '',
+    expanded: true,
+    sortKey: parseMtgDate(date) || Date.now(),
+    createdAt: Date.now()
+  });
+
+  saveMtgHistory(data);
+  dateInput.value = '';
+  titleInput.value = '';
+  document.getElementById('mtg-add-form').classList.remove('open');
+  renderMtgList();
+}
+
+function toggleMtgAccordion(id) {
+  const data = loadMtgHistory();
+  const mtg = data.find(m => m.id === id);
+  if (!mtg) return;
+  mtg.expanded = !mtg.expanded;
+  saveMtgHistory(data);
+  renderMtgList();
+}
+
+function updateMtgContent(id, content) {
+  const data = loadMtgHistory();
+  const mtg = data.find(m => m.id === id);
+  if (!mtg || mtg.type === 'builtin') return;
+  mtg.content = content;
+  saveMtgHistory(data);
+}
+
+/* ===== 資料メモ ===== */
+const MEMO_STORAGE_KEY = 'doc_memos';
+
+function loadMemos() {
+  try {
+    const raw = localStorage.getItem(MEMO_STORAGE_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMemos(data) {
+  localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(data));
+}
+
+function formatDateTime(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const y = d.getFullYear();
+  const mo = d.getMonth() + 1;
+  const day = d.getDate();
+  const h = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  return `${y}年${mo}月${day}日 ${h}:${mi}`;
+}
+
+function toggleMemoForm() {
+  document.getElementById('memo-add-form').classList.toggle('open');
+}
+
+function addMemo() {
+  const folder = document.getElementById('memo-folder-input').value;
+  const filename = document.getElementById('memo-filename-input').value.trim();
+  const body = document.getElementById('memo-body-input').value.trim();
+
+  if (!filename) {
+    alert('ファイル名を入力してください。');
+    return;
+  }
+
+  const memos = loadMemos();
+  memos.unshift({
+    id: 'memo-' + Date.now(),
+    folder,
+    filename,
+    body,
+    createdAt: new Date().toISOString()
+  });
+
+  saveMemos(memos);
+  document.getElementById('memo-filename-input').value = '';
+  document.getElementById('memo-body-input').value = '';
+  document.getElementById('memo-add-form').classList.remove('open');
+  renderMemos();
+}
+
+function deleteMemo(id) {
+  if (!confirm('このメモを削除しますか？')) return;
+  const memos = loadMemos().filter(m => m.id !== id);
+  saveMemos(memos);
+  renderMemos();
+}
+
+function renderMemos() {
+  const container = document.getElementById('memo-list');
+  if (!container) return;
+
+  const filter = document.getElementById('memo-filter').value;
+  let memos = loadMemos();
+  if (filter) memos = memos.filter(m => m.folder === filter);
+
+  if (memos.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="height:160px">
+        <i class="ti ti-notes"></i>
+        <span>${filter ? '該当するメモがありません' : 'メモがまだありません'}</span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = memos.map(memo => `
+    <div class="memo-card" data-memo-id="${escapeHtml(memo.id)}">
+      <div class="memo-card-header">
+        <div>
+          <span class="memo-folder">${escapeHtml(memo.folder)}</span>
+          <div class="memo-filename">${escapeHtml(memo.filename)}</div>
+          <div class="memo-datetime">${escapeHtml(formatDateTime(memo.createdAt))}</div>
+        </div>
+        <button type="button" class="btn-delete" onclick="deleteMemo('${escapeHtml(memo.id)}')">
+          <i class="ti ti-trash"></i> 削除
+        </button>
+      </div>
+      ${memo.body ? `<div class="memo-body">${escapeHtml(memo.body)}</div>` : '<div class="memo-body memo-body-empty">（メモ本文なし）</div>'}
+    </div>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderMtgList();
+  renderMemos();
+});
 
 /* ===== STATUS TOGGLE ===== */
 const statusCycle = [
@@ -864,6 +1356,8 @@ function switchTab(tab, el) {
   document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'agenda') renderMtgList();
+  if (tab === 'memos') renderMemos();
 }
 
 /* ===== ISSUE DETAIL ===== */
